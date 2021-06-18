@@ -7,9 +7,12 @@ for_rpython-c:	for_rpython.py bf.py
 bf_c:	bf_c.cpp
 	$(CXX) -o $@ -std=c++17 -O3 $<
 
+for_rpython-jit:	for_rpython.py bf.py
+	PYTHONPATH=$(PYPY_SRC_PATH) $(PYPY_SRC_PATH)/rpython/bin/rpython --opt=jit --output $@ for_rpython.py
+
 .PHONY:	clean
 clean:
-	rm -rf a.out bf_c *.pyc __pycache__ for_rpython-c
+	rm -rf a.out bf_c *.pyc __pycache__ for_rpython-c for_rpython-jit
 
 
 SOURCE_BF:=examples/mandelbrot.b
@@ -25,6 +28,10 @@ run-pypy-mandelbrot:
 .PHONY:	run-rpython-mandelbrot
 run-rpython-mandelbrot:	for_rpython-c
 	@time ./for_rpython-c $(SOURCE_BF)
+
+.PHONY:	run-jit-mandelbrot
+run-jit-mandelbrot:	for_rpython-jit
+	@time ./for_rpython-jit $(SOURCE_BF)
 
 .PHONY:	run-bf_c
 run-bf_c:	bf_c

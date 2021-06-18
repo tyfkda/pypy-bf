@@ -1,8 +1,23 @@
+try:
+  from rpython.rlib.jit import JitDriver
+except ImportError:
+  class JitDriver(object):
+    def __init__(self,**kw): pass
+    def jit_merge_point(self,**kw): pass
+    def can_enter_jit(self,**kw): pass
+
+jitdriver = JitDriver(
+  greens=['pc', 'program', 'bracket_map', 'tape'],
+  reds=['head'])
+
 def mainloop(program, bracket_map, putc, getc):
   tape = [0] * 30000
   pc = 0
   head = 0
   while pc < len(program):
+    jitdriver.jit_merge_point(pc=pc, head=head, tape=tape, program=program,
+                              bracket_map=bracket_map)
+
     code = program[pc]
 
     if code == '>':

@@ -3,3 +3,4 @@ __pycache__
 a.out
 bf_c
 for_rpython-c
+for_rpython-jit
