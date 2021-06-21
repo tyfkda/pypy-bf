@@ -2,5 +2,6 @@
 __pycache__
 a.out
 bf_c
+bf_xbyak
 for_rpython-c
 for_rpython-jit
